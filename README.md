@@ -5,10 +5,10 @@ This controller works with https://github.com/Simaho99/espDrone.git
 Requiremets
 
 All up-to-date
--Python 3.7 +
--Kivy
--Kivy garden graph
--pyModbusIP
+1. Python 3.7 +
+2. Kivy
+3. Kivy garden graph
+4. pyModbusIP
 
 You will also need
 Buildozer to build into mobile app (tested)
