@@ -1,0 +1,734 @@
+#:import Factory kivy.factory.Factory
+#:import MeshLinePlot kivy_garden.graph.MeshLinePlot
+
+<SetupScreen>:
+    name: "setup"
+    FloatLayout:
+        width: self.width
+        height: self.height
+        center_x: self.width * 1/2
+        center_y: self.height * 1/2
+
+        Label:
+            markup: True
+            size_hint: 1, 0.3
+            pos_hint: {"left":1, "top":1}
+            text: "[size=40]REMOTE IP CONTROL[/size]"
+            color: 0,1,0,1
+
+
+        GridLayout:
+            size_hint: 1, 0.4
+            pos_hint: {"left":1, "top":0.7}
+            cols: 2
+            Label:
+                text: "IP Address"
+            TextInput:
+                id: ip
+                hint_text: "192.168.43.54"
+                multiline: False
+
+            Label:
+                text: "Port Number"
+            TextInput:
+                id: port
+                multiline: False
+                hint_text: "502"
+
+            Label:
+                text: "SSID"
+            TextInput:
+                id: ssid
+                hint_text: "Crazy Engineer's"
+                multiline: False
+
+            Label:
+                text: "Password"
+            TextInput:
+                hint_text: "Alita:Battle Angel"
+                id: password
+                multiline: False
+
+            Label:
+                text: ""
+
+            Button:
+                # Check the text size on this one
+                text: "Proceed with Current/Default Values"
+                id: pop
+                # set size of the button
+                size_hint: 1, 0.4
+                # set position of the button
+                pos_hint: {"x":0, "y":0.1}
+                on_release:
+                    root.manager.current ="main";
+                    root.manager.transition.duration = 1
+                    root.manager.transition.direction = 'left'
+
+
+        Button:
+            size_hint: 1, 0.1
+            on_press: root.update_values()
+            on_release:
+                root.manager.current ="main";
+                root.custom_values()
+                root.manager.transition.duration = 1
+                root.manager.transition.direction = 'left'
+
+            text: "Submit Custom Values"
+            pos_hint: {"left":1, "bottom":1.0}
+
+
+Button:
+    text: 'Open popup'
+    on_release: Factory.MyPopup().open()
+
+<Popups>:
+    Label:
+        text: "Parameters are Empty"
+        size_hint: 0.6, 0.2
+        pos_hint: {"x":0.2, "top":1}
+
+    Button:
+        text: "Exit"
+        id: pop
+        # set size of the button
+        size_hint: 1, 0.4
+        # set position of the button
+        pos_hint: {"x":0, "y":0.1}
+
+
+
+
+<MainScreen>:
+    FloatLayout:
+
+        GridLayout:
+            cols: 1
+            size_hint: 1, 0.5
+            pos_hint: {"top":1, "left":1}
+
+            FloatLayout:
+
+                GridLayout:
+                    size_hint: 1, 0.2
+                    pos_hint: {"top":1, "left":1}
+                    cols: 1
+
+                    Label:
+                        text: "Parameters"
+
+                GridLayout:
+                    size_hint: 1, 0.8
+                    pos_hint: {"top":0.8, "left":1}
+                    cols: 3
+                    GridLayout:
+                        cols: 1
+                        Label:
+                            text: "WiFi"
+                            markup: True
+                            color: 0, 0, 1, 1
+                        Label:
+                            text: "Left Motor"
+                            markup: True
+                            color: 0, 0, 1, 1
+                        Label:
+                            text: "Right Motor"
+                            markup: True
+                            color: 0, 0, 1, 1
+                        Label:
+                            text: "Forward Motor"
+                            markup: True
+                            color: 0, 0, 1, 1
+                        Label:
+                            text: "Back Motor"
+                            markup: True
+                            color: 0, 0, 1, 1
+                        Label:
+                            text: "Angle X"
+                            markup: True
+                            color: 0, 0, 1, 1
+
+                        Label:
+                            text: "Angle Y"
+                            markup: True
+                            color: 0, 0, 1, 1
+
+                        Label:
+                            text: "Angle Z"
+                            markup: True
+                            color: 0, 0, 1, 1
+
+                        Label:
+                            text: "Altitude"
+                            markup: True
+                            color: 0, 0, 1, 1
+
+                        Label:
+                            text: "Actual Speed"
+                            markup: True
+                            color: 0, 0, 1, 1
+                    GridLayout:
+                        cols: 1
+                        Label:
+                            id: connection_status1
+                            text: root.connection_variable
+
+                            color: 0, 0, 1, 1
+                        Label:
+                            text: root.Motor_0
+                        Label:
+                            text: root.Motor_1
+                        Label:
+                            text: root.Motor_3
+                        Label:
+                            text: root.Motor_3
+                        Label:
+                            text: root.Angle_0
+                        Label:
+
+                            text: root.Angle_1
+                        Label:
+                            text: root.Angle_2
+                        Label:
+                            text: root.Altitude_1
+                        Label:
+                            text: root.Speed_1
+
+                    GridLayout:
+                        cols: 1
+                        Button:
+                            size_hint: 0.2, 0.1
+                            pos_hint: {"bottom":0.5, "left":0.25}
+                            on_release: root.on_off_parameter()
+                            text: "ON/OFF"
+                            color: 0,1,1,1
+                        Button:
+                            size_hint: 0.2, 0.1
+                            pos_hint: {"bottom":0.5, "left":0.25}
+                            on_release:
+                                root.manager.current = "setup"
+                                root.manager.transition.duration = 1
+                                root.manager.transition.direction = 'right'
+                            text: "REMOTE CNTRL"
+                            color: 0,1,1,1
+
+                        Button:
+                            size_hint: 0.2, 0.1
+                            pos_hint: {"bottom":0.5, "left":0.25}
+                            on_release:
+                                root.manager.current = "debug"
+                                root.manager.transition.duration = 1
+                                root.manager.transition.direction = 'left'
+                            text: "DEBUG"
+                            color: 0,1,1,1
+
+                        Button:
+                            size_hint: 0.2, 0.1
+                            pos_hint: {"bottom":0.5, "left":0.25}
+                            on_release:
+                                root.manager.current = "setup"
+                                root.manager.transition.duration = 1
+                                root.manager.transition.direction = 'right'
+                            text: "FUTURE"
+                            color: 0,1,1,1
+
+
+
+        GridLayout:
+            cols: 2
+            size_hint: 1, 0.5
+            pos_hint: {"bottom":1, "left":1}
+            GridLayout:
+                cols: 2
+                Button:
+                    id: left
+                    size_hint: 0.2, 0.1
+                    pos_hint: {"left":1, "y":0.25}
+                    on_press: root.left_on_press()
+                    on_release: root.left_on_release()
+                    on_release: root.movement_right_or_left()
+                    text: "LEFT"
+                    color: 0,1,1,1
+                Button:
+                    id: right
+                    size_hint: 0.2, 0.1
+                    pos_hint: {"right":1, "y":0.25}
+                    on_press: root.right_on_press()
+                    on_release: root.right_on_release()
+                    on_release: root.movement_right_or_left()
+                    text: "RIGHT"
+                    color: 0,1,1,1
+                Button:
+                    id: forward
+                    size_hint: 0.2, 0.1
+                    pos_hint: {"bottom":0.5, "left":0.25}
+                    on_press: root.forward_on_press()
+                    on_release: root.forward_on_release()
+                    on_release: root.movement_forward_or_back()
+                    text: "4WRD"
+                    color: 0,1,1,1
+
+                Button:
+                    id: back
+                    size_hint: 0.2, 0.1
+                    pos_hint: {"bottom":1, "left":0.25}
+                    on_press: root.back_on_press()
+                    on_release: root.back_on_release()
+                    on_release: root.movement_forward_or_back()
+                    text: "BACK"
+                    color: 0,1,1,1
+
+            GridLayout:
+                size_hint: 1, 0.5
+                cols: 2
+
+                GridLayout:
+                    cols: 1
+                    Label:
+                        text: "Throttle"
+                        color: 1, 0, 1, 1
+
+                    Label:
+                        text: str(slider.value)[:5]
+
+                    Button:
+                        size_hint: 1, 0.5
+                        pos_hint: {"bottom":1, "left":0.25}
+                        on_release: root.control_parameters()
+                        text: "AUTO PILOT"
+                        color: 0,1,1,1
+
+                Slider:
+                    id: slider
+                    max: 255
+                    min: 0
+                    value: root.value
+                    step: 1
+                    height: 255
+                    orientation: "vertical"
+                    on_value: root.slider_value(slider.value)
+
+
+
+<DebugScreen>:
+    FloatLayout:
+        width: self.width
+        height: self.height
+        center_x: self.width * 1/2
+        center_y: self.height * 1/2
+
+        GridLayout:
+            pos_hint: {"left":1, "top":1}
+            size_hint: 1, 0.2
+            cols: 2
+
+            Graph:
+                id: motor0_graph
+                plot: MeshLinePlot
+                xlabel:''
+                ylabel:''
+                x_ticks_minor:5
+                x_ticks_major:25
+                y_ticks_major:45
+                y_grid_label:False
+                x_grid_label:False
+                padding:5
+                x_grid:True
+                y_grid:False
+                xmin:root.x_min0
+                xmax:root.x_max0
+                ymin:-90
+                ymax:90
+
+                size_hint: 0.67, 0.2
+
+            GridLayout:
+                size_hint: 0.33, 0.2
+                pos_hint: {"left":1, "top":1}
+                cols: 1
+
+                Label:
+                    text: "Yaw (Ki, Kc, Kp)"
+                    size_hint: 1, 0.2
+                Slider:
+                    id: yaw_slider_Ki
+                    max: 10
+                    min: 0
+                    step: 0.01
+                    height: 255
+                    orientation: "horizontal"
+                    on_value: root.slider_value()
+
+
+                Slider:
+                    id: yaw_slider_Kp
+                    max: 10
+                    min: 0
+                    step: 0.01
+                    height: 255
+                    orientation: "horizontal"
+                    on_value: root.slider_value()
+
+
+                Slider:
+                    id: yaw_slider_Kd
+                    max: 10
+                    min: 0
+                    step:0.01
+                    height: 255
+                    orientation: "horizontal"
+                    on_value: root.slider_value()
+
+
+
+        GridLayout:
+            size_hint: 1, 0.2
+            pos_hint: {"left":1, "top":0.8}
+            cols: 2
+
+            Graph:
+                id: motor1_graph
+                plot: MeshLinePlot
+                xlabel:''
+                ylabel:''
+                x_ticks_minor:5
+                x_ticks_major:25
+                y_ticks_major:45
+                y_grid_label:False
+                x_grid_label:False
+                padding:5
+                x_grid:True
+                y_grid:False
+                xmin:root.x_min1
+                xmax:root.x_max1
+                ymin:-90
+                ymax:90
+                size_hint: 0.67, 0.3
+
+
+            GridLayout:
+                size_hint: 0.33, 0.3
+                pos_hint: {"left":1, "top":0.8}
+                cols: 1
+
+                Label:
+                    text: "Pitch (Ki, Kc, Kp)"
+                    size_hint: 1, 0.2
+                Slider:
+                    id: pitch_slider_Ki
+                    max: 10
+                    min: 0
+                    step: 0.01
+                    height: 255
+                    orientation: "horizontal"
+                    on_value: root.slider_value()
+
+
+                Slider:
+                    id: pitch_slider_Kp
+                    max: 10
+                    min: 0
+                    step:0.01
+                    height: 255
+                    orientation: "horizontal"
+                    on_value: root.slider_value()
+
+
+                Slider:
+                    id: pitch_slider_Kd
+                    max: 10
+                    min: 0
+                    step: 0.01
+                    height: 255
+                    orientation: "horizontal"
+                    on_value: root.slider_value()
+
+
+        GridLayout:
+            size_hint: 1, 0.2
+            pos_hint: {"left":1, "top":0.6}
+            cols: 2
+
+            Graph:
+                id: motor2_graph
+                plot: MeshLinePlot
+                xlabel:''
+                ylabel:''
+                x_ticks_minor:5
+                x_ticks_major:25
+                y_ticks_major:45
+                y_grid_label:False
+                x_grid_label:False
+                padding:5
+                x_grid:True
+                y_grid:False
+                xmin:root.x_min2
+                xmax:root.x_max2
+                ymin:-90
+                ymax:90
+                size_hint: 0.67, 0.2
+
+
+            GridLayout:
+                size_hint: 0.33, 0.2
+                pos_hint: {"left":1, "top":1}
+                cols: 1
+
+                Label:
+                    text: "Roll (Ki, Kc, Kp)"
+                    size_hint: 1, 0.5
+                Slider:
+                    id: roll_slider_Ki
+                    max: 10
+                    min: 0
+                    step: 0.01
+                    height: 255
+                    orientation: "horizontal"
+                    on_value: root.slider_value()
+
+
+                Slider:
+                    id: roll_slider_Kp
+                    max: 10
+                    min: 0
+                    step: 0.01
+                    height: 255
+                    orientation: "horizontal"
+                    on_value: root.slider_value()
+
+
+                Slider:
+                    id: roll_slider_Kd
+                    max: 10
+                    min: 0
+                    step: 0.01
+                    height: 255
+                    orientation: "horizontal"
+                    on_value: root.slider_value()
+
+        GridLayout:
+            size_hint: 1, 0.2
+            pos_hint: {"left":1, "top":0.4}
+            cols: 2
+
+            Graph:
+                id: motor3_graph
+                plot: MeshLinePlot
+                xlabel:''
+                ylabel:''
+                x_ticks_minor:5
+                x_ticks_major: 25
+                y_ticks_major:45
+                y_grid_label:False
+                x_grid_label:False
+                padding:5
+                x_grid:True
+                y_grid:False
+                xmin:root.x_min3
+                xmax:root.x_max3
+                ymin:-90
+                ymax:90
+                size_hint: 0.67, 0.2
+
+            GridLayout:
+                cols: 1
+                size_hint: 0.33, 0.2
+                GridLayout:
+                    cols: 4
+                    Label:
+                        text: " "
+                    Label:
+                        text: "Ki"
+                    Label:
+                        text: "Kp"
+                    Label:
+                        text: "Kd"
+
+
+                    Label:
+                        text: "Yaw"
+                    Label:
+                        id: yaw_Ki
+                        text: str(root.yaw_Ki)
+
+                    Label:
+                        id: yaw_Kp
+                        text: str(root.yaw_Kp)
+
+                    Label:
+                        id: yaw_Kd
+                        text: str(root.yaw_Kd)
+
+
+                    Label:
+                        text: "Pitch"
+                    Label:
+                        id: pitch_Ki
+                        text: str(root.pitch_Ki)
+
+                    Label:
+                        id: pitch_Kp
+                        text: str(root.pitch_Kp)
+
+                    Label:
+                        id: pitch_Kd
+                        text: str(root.pitch_Kd)
+
+
+                    Label:
+                        text: "Roll"
+                    Label:
+                        id: roll_Ki
+                        text: str(root.roll_Ki)
+
+                    Label:
+                        id: roll_Kp
+                        text: str(root.roll_Kp)
+
+                    Label:
+                        id: roll_Kd
+                        text: str(root.roll_Kd)
+
+
+                Button:
+                    on_release:
+                        root.manager.current = "setup"
+                        root.manager.transition.duration = 1
+                        root.manager.transition.direction = 'right'
+                    text: "Auto Tune"
+
+        GridLayout:
+            pos_hint: {"left":1, "top":0.2}
+            size_hint: 1, 0.05
+            cols: 3
+
+            GridLayout:
+                cols: 3
+
+                Button:
+                    on_press:
+                        root.pressed_back()
+                    text: "<<<"
+
+                Button:
+                    on_press:
+                        root.pressed_continue()
+                    text: "Continue" if str(root.pressed) == "Continua" else "Snapped"
+
+
+                Button:
+                    on_press:
+                        root.pressed_forward()
+                    text: ">>>"
+
+            GridLayout:
+                cols: 2
+
+                Label:
+                    text: "Size of Snap"
+
+                Label:
+                    text: str(root.size_of_snap)
+
+            Button:
+
+                on_release:
+                    root.clear_issues()
+                text: "Tune"
+
+
+
+
+    GridLayout:
+        cols: 3
+        size_hint: 1, 0.15
+
+        GridLayout:
+            cols: 1
+            size_hint: 1, 0.05
+
+            GridLayout:
+                cols: 5
+
+                GridLayout:
+                    cols: 1
+                    Label:
+                        text: "T\MT"
+                    Label:
+                        text: "From"
+                    Label:
+                        text: "To"
+
+                GridLayout:
+                    cols: 1
+                    Label:
+                        text: "FR_M"
+                    TextInput:
+                        id: motor0_from
+                    TextInput:
+                        id: motor0_to
+                GridLayout:
+                    cols: 1
+                    Label:
+                        text: "BC_M"
+                    TextInput:
+                        id: motor1_from
+                    TextInput:
+                        id: motor1_to
+
+                GridLayout:
+                    cols: 1
+                    Label:
+                        text: "RT_M"
+                    TextInput:
+                        id: motor2_from
+                    TextInput:
+                        id: motor2_to
+
+                GridLayout:
+                    cols: 1
+                    Label:
+                        text: "LF_M"
+                    TextInput:
+                        id: motor3_from
+                    TextInput:
+                        id: motor3_to
+
+        GridLayout:
+            cols: 1
+
+            GridLayout:
+                cols: 2
+                Button:
+                    on_release:
+                        root.motor_id_submit()
+                    text: "Submit"
+
+                Button:
+                    on_release:
+                        root.clear_issues()
+                    text: "Clear"
+
+            GridLayout:
+                cols: 2
+                Button:
+                    on_release:
+                        root.zoom_submit()
+                    text: "Zoom +"
+
+                Button:
+                    on_release:
+                        root.zoom_clear()
+                    text: "Zoom -"
+
+
+
+        Button:
+            on_release:
+                root.motors_plot()
+                root.manager.current = "main"
+                root.manager.transition.duration = 1
+                root.manager.transition.direction = 'right'
+            text: "CONTROLS"
+            pos_hint: {"left":1, "bottom":1.0}
