@@ -17,7 +17,8 @@ Kivy_ios for ios app (tested)
 There are two ways to connect to the app
 1. Using Local IP to control drone (192.168.4.1 and Port 502 for ModbusIP) usually connects automatically
 after WiFi Connection.
-2. Set a public IP per your requirement (on SETTING page)
+2. Set a public IP per your requirement (on SETTING page), you will need get the right SSID and Password from 
+the arduino code
 
 Currently you can set the PID variables from the app interractively and read the ourput on the app
 in form of graphs. The output is the angles, input angle, set angle and the PID angle our output angle
