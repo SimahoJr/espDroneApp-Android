@@ -24,6 +24,7 @@ pid_values = []
 m = []
 pid_parameters = False
 
+
 class Popups(FloatLayout):
     pass
 
@@ -95,6 +96,7 @@ class SetupScreen(Screen):
 
 # setupScreen methods
 
+
 class DebugScreen(Screen):
     roll_Ki = NumericProperty()
     roll_Kp = NumericProperty()
@@ -136,12 +138,12 @@ class DebugScreen(Screen):
         Clock.schedule_interval(self.motors_plot, INTERVAL)     # one millisecond
 
         self.counter = 0
-        self.motor0_id_from = None
-        self.motor0_id_to = None
-        self.motor1_id_from = None
-        self.motor1_id_to = None
-        self.motor2_id_from = None
-        self.motor2_id_to = None
+        self.yaw_id_from = None
+        self.yaw_id_to = None
+        self.pitch_id_from = None
+        self.pitch_id_to = None
+        self.roll_id_from = None
+        self.roll_id_to = None
         self.motor3_id_from = None
         self.motor3_id_to = None
 
@@ -203,59 +205,49 @@ class DebugScreen(Screen):
         pass
 
     def motor_id_clear(self):
-        self.ids.motor0_from.text = ""
-        self.ids.motor0_to.text = ""
-        self.ids.motor1_from.text = ""
-        self.ids.motor1_to.text = ""
-        self.ids.motor2_from.text = ""
-        self.ids.motor2_to.text = ""
-        self.ids.motor3_from.text = ""
-        self.ids.motor3_to.text = ""
+        self.ids.yaw_from.text = ""
+        self.ids.yaw_to.text = ""
+        self.ids.pitch_from.text = ""
+        self.ids.pitch_to.text = ""
+        self.ids.roll_from.text = ""
+        self.ids.roll_to.text = ""
 
     def motor_id_submit(self):
-        if self.ids.motor0_from.text == "":
-            self.ids.motor0_from.text = "0"
-        if self.ids.motor0_to.text == "":
-            self.ids.motor0_to.text = "0"
+        if self.ids.yaw_from.text == "":
+            self.ids.yaw_from.text = "0"
+        if self.ids.yaw_to.text == "":
+            self.ids.yaw_to.text = "0"
 
-        if self.ids.motor1_from.text == "":
-            self.ids.motor1_from.text = "0"
-        if self.ids.motor1_to.text == "":
-            self.ids.motor1_to.text = "0"
+        if self.ids.pitch_from.text == "":
+            self.ids.pitch_from.text = "0"
+        if self.ids.pitch_to.text == "":
+            self.ids.pitch_to.text = "0"
 
-        if self.ids.motor2_from.text == "":
-            self.ids.motor2_from.text = "0"
-        if self.ids.motor2_to.text == "":
-            self.ids.motor2_to.text = "0"
+        if self.ids.roll_from.text == "":
+            self.ids.roll_from.text = "0"
+        if self.ids.roll_to.text == "":
+            self.ids.roll_to.text = "0"
 
-        if self.ids.motor3_from.text == "":
-            self.ids.motor3_from.text = "0"
-        if self.ids.motor3_to.text == "":
-            self.ids.motor3_to.text = "0"
+        self.yaw_id_from = int(self.ids.yaw_from.text)
+        self.yaw_id_to = int(self.ids.yaw_to.text)
 
-        self.motor0_id_from = int(self.ids.motor0_from.text)
-        self.motor0_id_to = int(self.ids.motor0_to.text)
+        self.pitch_id_from = int(self.ids.pitch_from.text)
+        self.pitch_id_to = int(self.ids.pitch_to.text)
 
-        self.motor1_id_from = int(self.ids.motor1_from.text)
-        self.motor1_id_to = int(self.ids.motor1_to.text)
+        self.roll_id_from = int(self.ids.roll_from.text)
+        self.roll_id_to = int(self.ids.roll_to.text)
 
-        self.motor2_id_from = int(self.ids.motor2_from.text)
-        self.motor2_id_to = int(self.ids.motor2_to.text)
-
-        self.motor3_id_from = int(self.ids.motor3_from.text)
-        self.motor3_id_to = int(self.ids.motor3_to.text)
-
-        if self.motor0_id_to == 0:
-            self.motor0_id_to = None
-        if self.motor1_id_to == 0:
-            self.motor1_id_to = None
-        if self.motor2_id_to == 0:
-            self.motor2_id_to = None
+        if self.yaw_id_to == 0:
+            self.yaw_id_to = None
+        if self.pitch_id_to == 0:
+            self.pitch_id_to = None
+        if self.roll_id_to == 0:
+            self.roll_id_to = None
         if self.motor3_id_to == 0:
             self.motor3_id_to = None
 
-        return [[self.motor0_id_from, self.motor0_id_to], [self.motor1_id_from, self.motor1_id_to],
-                [self.motor2_id_from, self.motor2_id_to], [self.motor3_id_from, self.motor3_id_to]]
+        return [[self.yaw_id_from, self.yaw_id_to], [self.pitch_id_from, self.pitch_id_to],
+                [self.roll_id_from, self.roll_id_to], [self.motor3_id_from, self.motor3_id_to]]
 
     def motors_plot(self, *args):
         """
@@ -317,15 +309,11 @@ class DebugScreen(Screen):
         #           self.yawPID_list, self.rollInput, self.pitchInput, self.yawInput]
         reg_snap = our_value[1]
         # print(reg_snap)
+
+        # print(yaw)
         set_point = reg_stream[0:3]
         pid_point = reg_stream[3:6]
         output_point = reg_stream[6:9]
-
-        # reg_snap consists of 100 values of snaps each time
-        set_point_snap = reg_snap[0:3]
-        pid_point_snap = reg_snap[3:6]
-        output_point_snap = reg_snap[6:9]
-        # print(yaw)
 
         reg_0 = set_point[0]        # Set_point
         reg_1 = pid_point[0]        # Input
@@ -341,6 +329,7 @@ class DebugScreen(Screen):
         reg_8 = output_point[2]     # Output
 
 #   TODO The speed gets smaller as values increases, should i pop some out? delete?
+        #    TODO The speed is also slow when there is no connection
         #    do i need the data?
 
         if self.pressed == "Continua":
@@ -415,51 +404,73 @@ class DebugScreen(Screen):
                                 self.x_max0 = self.x_max0
                                 self.x_min0 = self.x_min0
             """
-            if len(reg_snap) != 0:
-                reg_0_snap = set_point_snap[0]      # Set_point
-                reg_1_snap = pid_point_snap[0]      # Input
+
+            # reg_snap consists of 100 values of snaps each time
+            a = int(self.pressed)
+            # gives output of n_snaps lists consisting of nine lists each of 100 values
+
+            # if a > len(reg_snap):
+            #     a = a - 1
+            #     self.pressed = str(a - 1)
+
+            print("the value of a is ", a)
+            print("the value of len(reg_snap) is ", reg_snap)
+
+            if len(reg_snap) == 9:
+                a = a-1
+                reg_number = reg_snap[a]
+                print("Reg value  ", reg_number[a])
+
+                set_point_snap = [reg_number[0:3]]
+                pid_point_snap = [reg_number[3:6]]
+                output_point_snap = [reg_number[6:9]]
+                print(pid_point_snap)
+
+                reg_0_snap = set_point_snap[0]     # Set_point
+                reg_1_snap = pid_point_snap[0]    # Input
                 reg_2_snap = output_point_snap[0]   # Output
 
-                reg_3_snap = set_point_snap[1]      # Set_point
-                reg_4_snap = pid_point_snap[1]      # Input
+                reg_3_snap = set_point_snap[1]     # Set_point
+                reg_4_snap = pid_point_snap[1]     # Input
                 reg_5_snap = output_point_snap[1]   # Output
                 # print("Hwll  ", reg_4)
 
-                reg_6_snap = set_point_snap[2]      # Set_point
-                reg_7_snap = pid_point_snap[2]      # Input
+                reg_6_snap = set_point_snap[2]     # Set_point
+                reg_7_snap = pid_point_snap[2]     # Input
                 reg_8_snap = output_point_snap[2]   # Output
 
-                recv_reg = reg_snap[int(self.pressed)]
-                a = int(self.pressed)
-                if a > 2:
-                    a = 2
-                print(reg_0_snap)
+                # 0 up to 10 for the first 100 values
+                # 10 up to 20 f0r the second 100 values
+                print(len(reg_3))
+                print(len(reg_4))
+                print(len(reg_5))
 
-                reg_0 = reg_0_snap[0 + 3 * a][self.motor0_id_from:self.motor0_id_to]
-                reg_1 = reg_1_snap[0 + 3 * a][self.motor1_id_from:self.motor1_id_to]
-                reg_2 = reg_2_snap[0 + 3 * a][self.motor2_id_from:self.motor2_id_to]
+                reg_0 = reg_0_snap[self.yaw_id_from:self.yaw_id_to]
+                reg_1 = reg_1_snap[self.yaw_id_from:self.yaw_id_to]
+                reg_2 = reg_2_snap[self.yaw_id_from:self.yaw_id_to]
 
-                reg_3 = reg_3_snap[1 + 3 * a][self.motor0_id_from:self.motor0_id_to]
-                reg_4 = reg_4_snap[1 + 3 * a][self.motor1_id_from:self.motor1_id_to]
-                reg_5 = reg_5_snap[1 + 3 * a][self.motor2_id_from:self.motor2_id_to]
+                reg_3 = reg_3_snap[self.pitch_id_from:self.pitch_id_to]
+                reg_4 = reg_4_snap[self.pitch_id_from:self.pitch_id_to]
+                reg_5 = reg_5_snap[self.pitch_id_from:self.pitch_id_to]
 
-                reg_6 = reg_6_snap[2 + 3 * a][self.motor0_id_from:self.motor0_id_to]
-                reg_7 = reg_7_snap[2 + 3 * a][self.motor1_id_from:self.motor1_id_to]
-                reg_8 = reg_8_snap[2 + 3 * a][self.motor2_id_from:self.motor2_id_to]
+                reg_6 = reg_6_snap[self.roll_id_from:self.roll_id_to]
+                reg_7 = reg_7_snap[self.roll_id_from:self.roll_id_to]
+                reg_8 = reg_8_snap[self.roll_id_from:self.roll_id_to]
 
-                self.x_max0 = len(reg_0)
-                self.x_min0 = 0
-                self.x_max1 = len(reg_3)
-                self.x_min1 = 0
-                self.x_max2 = len(reg_6)
-                self.x_min2 = 0
-                self.x_max3 = len(reg_6)
-                self.x_min3 = 0
+                self.x_max0 = len(reg_0) + self.x_min0
+                self.x_min0 = self.x_min0
+                self.x_max1 = len(reg_1) + self.x_min1
+                self.x_min1 = self.x_min1
+                self.x_max2 = len(reg_2) + self.x_min2
+                self.x_min2 = self.x_min2
+                self.x_max3 = len(reg_3) + self.x_min3
+                self.x_min3 = self.x_min3
 
-                self.size_snap = [len(reg_0), len(reg_1), len(reg_2), len(reg_3), len(reg_4), len(reg_5), len(reg_6),
-                                  len(reg_7), len(reg_8)]
 
-                print("Got here")
+            self.size_snap = [len(reg_0), len(reg_1), len(reg_2), len(reg_3), len(reg_4), len(reg_5), len(reg_6),
+                              len(reg_7), len(reg_8)]
+
+            print("Got here")
 
         #         print("reached here")
         #
@@ -536,6 +547,7 @@ class DebugScreen(Screen):
         if int(self.pressed) < 0:
             self.size_of_snap = str(self.pressed)
             self.pressed = "Continua"
+        self.size_of_snap = str(self.pressed)
 
     def pressed_continue(self):
         self.pressed = "Continua"
@@ -731,7 +743,6 @@ class MainScreen(Screen):
                 #     self.yawInput_list.pop(0)
 
                 # print("Read reg: {0}".format(a))
-                a.clear()
 
         if self.connection_variable == "Disconnected":
             # if len(self.rollSet_list) < size:
@@ -757,9 +768,8 @@ class MainScreen(Screen):
         m = [self.rollSet_list, self.pitchSet_list, self.yawSet_list, self.rollPID_list, self.pitchPID_list,
              self.yawPID_list, self.rollInput_list, self.pitchInput_list, self.yawInput_list]
 
-        # if there is anything in the sample_snip then add to the snapshot
+        """This code clears everything on pid parameter change"""
         global pid_parameters
-        print(pid_parameters)
         if pid_parameters is True:
             self.rollSet_list.clear()
             self.pitchSet_list.clear()
@@ -796,14 +806,19 @@ class MainScreen(Screen):
         # print(self.m)
 
         # slicing a list
+        # slicing a list on the order of sample size and append the snaps
+        self.snap_shot.clear()
         for i in range(0, len(m)):
             if len(m[i]) % self.sample_size == 0:
+                # All will reach sample size at the same time
                 self.snap = m[i][-self.sample_size-1:-1]
-                self.snap_shot.append(self.snap)
         #         need to clear
-        self.snap_send.append(self.snap_shot)
 
-        # print(self.snap_shot)
+        if len(self.snap) != 0:
+            self.snap_send.append([self.snap])
+
+        print("the lengthe of snap send is ", len(self.snap_shot))
+        print("the lengthe of snap send is BIG ", len(self.snap_send))
         global our_value
         our_value = [m, self.snap_send]
 
@@ -978,15 +993,15 @@ class MainScreen(Screen):
                 # print(sent_list)
                 # print("Throttle", sent_list)
 
-        # if self.connection_variable == "Connected":
-        #     #  write 1 (16bit) register at address 100
-        #     # if c.write_multiple_registers(200, sent_list):
-        #     #     print("write ok")
-        #     for m in range(0, len(sent_list)):
-        #         if c.write_single_register(110+m, sent_list[m]):
-        #             print("write ok")
-        #         else:
-        #             print("write error")
+        if self.connection_variable == "Connected":
+            #  write 1 (16bit) register at address 100
+            # if c.write_multiple_registers(200, sent_list):
+            #     print("write ok")
+            for m in range(0, len(sent_list)):
+                if c.write_single_register(110+m, sent_list[m]):
+                    print("write ok")
+                else:
+                    print("write error")
 
 
 """The Main Function Starts Here
@@ -1032,6 +1047,7 @@ righ_left_reg: Right Left Register
 0 ----> No Right Left Movement
 right_left_reg:value-----> Degree of left_ness or right_ness
 """
+
 
 class DroneApp(App):
     def __init__(self):

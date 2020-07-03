@@ -649,12 +649,12 @@ Button:
             size_hint: 1, 0.05
 
             GridLayout:
-                cols: 5
+                cols: 4
 
                 GridLayout:
                     cols: 1
                     Label:
-                        text: "T\MT"
+                        text: "Angle"
                     Label:
                         text: "From"
                     Label:
@@ -663,37 +663,29 @@ Button:
                 GridLayout:
                     cols: 1
                     Label:
-                        text: "FR_M"
+                        text: "Yaw"
                     TextInput:
-                        id: motor0_from
+                        id: yaw_from
                     TextInput:
-                        id: motor0_to
+                        id: yaw_to
                 GridLayout:
                     cols: 1
                     Label:
-                        text: "BC_M"
+                        text: "Pitch"
                     TextInput:
-                        id: motor1_from
+                        id: pitch_from
                     TextInput:
-                        id: motor1_to
+                        id: pitch_to
 
                 GridLayout:
                     cols: 1
                     Label:
-                        text: "RT_M"
+                        text: "Roll"
                     TextInput:
-                        id: motor2_from
+                        id: roll_from
                     TextInput:
-                        id: motor2_to
+                        id: roll_to
 
-                GridLayout:
-                    cols: 1
-                    Label:
-                        text: "LF_M"
-                    TextInput:
-                        id: motor3_from
-                    TextInput:
-                        id: motor3_to
 
         GridLayout:
             cols: 1
