@@ -1,0 +1,3 @@
+# Continuous Integration (CI) is the practice, in software
+- name: TODO to Issue
+  uses: alstr/todo-to-issue-action@v1.2-beta
