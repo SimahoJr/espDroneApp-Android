@@ -149,6 +149,7 @@ class DebugScreen(Screen):
         self.recv_reg = []
         self.dazzle = 0
         self.n = 1
+        self.p = 1
 
     def update_check(self):
         pass
@@ -159,10 +160,15 @@ class DebugScreen(Screen):
         self.x_max0 = 2000
 
     def slider_value(self):
-        # Updating the labels
+        """
+        This updates the PID parameters, we need this to be interactive
+        :return:
+        The graph should start from 0 when this is pressed
+        """
 
-        a = 10 * self.dazzle
+        a = self.dazzle % 100
 
+        print("reminder is ", a)
         self.x_max0 = self.x_max0 + a
         self.x_min0 = self.x_min0 + a
         self.x_max1 = self.x_max1 + a
@@ -171,6 +177,7 @@ class DebugScreen(Screen):
         self.x_min2 = self.x_min2 + a
         self.x_max3 = self.x_max3 + a
         self.x_min3 = self.x_min3 + a
+        self.dazzle = 0
 
         self.yaw_Ki = round(self.ids.yaw_slider_Ki.value, 3)
         self.yaw_Kp = round(self.ids.yaw_slider_Kp.value, 3)
@@ -184,9 +191,9 @@ class DebugScreen(Screen):
         self.roll_Kp = round(self.ids.roll_slider_Kp.value, 3)
         self.roll_Kd = round(self.ids.roll_slider_Kd.value, 3)
 
-        self.dazzle = self.dazzle + 1
-        if self.dazzle == 3:
-            self.dazzle = 2
+        # self.dazzle = self.dazzle + a
+        # if self.dazzle == 3:
+        #     self.dazzle = 2
         # print(round(float(self.ids.yaw_slider_Ki.value), 2))
 
         return [[self.yaw_Ki, self.yaw_Kp, self.yaw_Kd], [self.pitch_Ki, self.pitch_Kp, self.pitch_Kd], [
@@ -333,8 +340,11 @@ class DebugScreen(Screen):
         reg_7 = pid_point[2]        # Input
         reg_8 = output_point[2]     # Output
 
+#   TODO The speed gets smaller as values increases, should i pop some out? delete?
+        #    do i need the data?
+
         if self.pressed == "Continua":
-            print(self.x_min0)
+            print("x min is ", self.x_min0)
 
             # print(self.pop_counter)
 
@@ -347,28 +357,32 @@ class DebugScreen(Screen):
             # self.x_max3 = len(reg_3)
             # if self.x_max0 % 100 == 0:
             #     self.n = self.n + 1
+            d = self.x_max0 - self.x_min0
 
             if self.x_max0 <= self.dazzle:
-                a = self.dazzle // 100 * 100
+                a = self.dazzle // d * d
 
                 # self.x_max0 = self.x_max0 + a + 1
                 self.x_min0 = a
-                self.x_max0 = 100 + a
+                self.x_max0 = d + a
                 self.x_min1 = a
-                self.x_max1 = 100 + a
+                self.x_max1 = d + a
                 self.x_min2 = a
-                self.x_max2 = 100 + a
+                self.x_max2 = d + a
                 self.x_min3 = a
-                self.x_max3 = 100 + a
-
+                self.x_max3 = d + a
 
                 # self.dazzle = 2 * self.x_max0
 
             self.dazzle = self.dazzle + 1
-            print(self.dazzle)
-            print(self.x_max0)
+            if self.dazzle == 100:
+                self.dazzle = self.x_max0
 
+            # if (self.dazzle - self.x_min0) < 5:
+            #     self.x_min0 = self.dazzle
 
+            print("the dazzle value is ", self.dazzle)
+            print("x max is ", self.x_max0)
 
             # for i in range(0, len(self.recv_reg)):
             #     if len(self.recv_reg[i]) % 100 == 0:
@@ -716,7 +730,7 @@ class MainScreen(Screen):
                 # if len(self.yawInput_list) > size:
                 #     self.yawInput_list.pop(0)
 
-                print("Read reg: {0}".format(a))
+                # print("Read reg: {0}".format(a))
                 a.clear()
 
         if self.connection_variable == "Disconnected":
@@ -964,15 +978,15 @@ class MainScreen(Screen):
                 # print(sent_list)
                 # print("Throttle", sent_list)
 
-        if self.connection_variable == "Connected":
-            #  write 1 (16bit) register at address 100
-            # if c.write_multiple_registers(200, sent_list):
-            #     print("write ok")
-            for m in range(0, len(sent_list)):
-                if c.write_single_register(110+m, sent_list[m]):
-                    print("write ok")
-                else:
-                    print("write error")
+        # if self.connection_variable == "Connected":
+        #     #  write 1 (16bit) register at address 100
+        #     # if c.write_multiple_registers(200, sent_list):
+        #     #     print("write ok")
+        #     for m in range(0, len(sent_list)):
+        #         if c.write_single_register(110+m, sent_list[m]):
+        #             print("write ok")
+        #         else:
+        #             print("write error")
 
 
 """The Main Function Starts Here
