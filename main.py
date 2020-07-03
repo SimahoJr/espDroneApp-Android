@@ -152,6 +152,7 @@ class DebugScreen(Screen):
         self.dazzle = 0
         self.n = 1
         self.p = 1
+        self.reg = []
 
     def update_check(self):
         pass
@@ -333,7 +334,7 @@ class DebugScreen(Screen):
         #    do i need the data?
 
         if self.pressed == "Continua":
-            print("x min is ", self.x_min0)
+            # print("x min is ", self.x_min0)
 
             # print(self.pop_counter)
 
@@ -370,8 +371,8 @@ class DebugScreen(Screen):
             # if (self.dazzle - self.x_min0) < 5:
             #     self.x_min0 = self.dazzle
 
-            print("the dazzle value is ", self.dazzle)
-            print("x max is ", self.x_max0)
+            # print("the dazzle value is ", self.dazzle)
+            # print("x max is ", self.x_max0)
 
             # for i in range(0, len(self.recv_reg)):
             #     if len(self.recv_reg[i]) % 100 == 0:
@@ -412,19 +413,30 @@ class DebugScreen(Screen):
             # if a > len(reg_snap):
             #     a = a - 1
             #     self.pressed = str(a - 1)
-
             print("the value of a is ", a)
             print("the value of len(reg_snap) is ", reg_snap)
+            dm = []
+            for i in range(0, len(reg_snap)):
+                if len(reg_snap[i]) != 0:
+                    for j in range(0, len(reg_snap[i])):
+                        if len(reg_snap[i][j]) != 0:
+                            dm.append(reg_snap[i][j])
 
-            if len(reg_snap) == 9:
+            if len(dm) != 0:
+                self.reg.append(dm)
+
+            print("Reg self.reg is ", self.reg)
+            print(len(self.reg))
+
+            if a <= len(self.reg):
                 a = a-1
-                reg_number = reg_snap[a]
-                print("Reg value  ", reg_number[a])
-
-                set_point_snap = [reg_number[0:3]]
-                pid_point_snap = [reg_number[3:6]]
-                output_point_snap = [reg_number[6:9]]
-                print(pid_point_snap)
+                reg_number = self.reg[a]        # Now we have 9 values consisting of lists
+                # print("Reg value  ", reg_number[a])
+                print("reg a ", self.reg[a])
+                set_point_snap = reg_number[0:3]
+                pid_point_snap = reg_number[3:6]
+                output_point_snap = reg_number[6:9]
+                print(set_point_snap)
 
                 reg_0_snap = set_point_snap[0]     # Set_point
                 reg_1_snap = pid_point_snap[0]    # Input
@@ -457,15 +469,14 @@ class DebugScreen(Screen):
                 reg_7 = reg_7_snap[self.roll_id_from:self.roll_id_to]
                 reg_8 = reg_8_snap[self.roll_id_from:self.roll_id_to]
 
-                self.x_max0 = len(reg_0) + self.x_min0
+                self.x_max0 = len(reg_0) + self.x_max0
                 self.x_min0 = self.x_min0
-                self.x_max1 = len(reg_1) + self.x_min1
+                self.x_max1 = len(reg_1) + self.x_max0
                 self.x_min1 = self.x_min1
-                self.x_max2 = len(reg_2) + self.x_min2
+                self.x_max2 = len(reg_2) + self.x_max0
                 self.x_min2 = self.x_min2
-                self.x_max3 = len(reg_3) + self.x_min3
-                self.x_min3 = self.x_min3
-
+                self.x_max3 = len(reg_3) + self.x_max0
+                self.x_min3 = self.x_min2
 
             self.size_snap = [len(reg_0), len(reg_1), len(reg_2), len(reg_3), len(reg_4), len(reg_5), len(reg_6),
                               len(reg_7), len(reg_8)]
@@ -807,18 +818,19 @@ class MainScreen(Screen):
 
         # slicing a list
         # slicing a list on the order of sample size and append the snaps
+        self.snap.clear()
         self.snap_shot.clear()
         for i in range(0, len(m)):
             if len(m[i]) % self.sample_size == 0:
                 # All will reach sample size at the same time
                 self.snap = m[i][-self.sample_size-1:-1]
+                self.snap_shot.append(self.snap)
         #         need to clear
 
         if len(self.snap) != 0:
-            self.snap_send.append([self.snap])
-
-        print("the lengthe of snap send is ", len(self.snap_shot))
-        print("the lengthe of snap send is BIG ", len(self.snap_send))
+            self.snap_send.append(self.snap_shot)
+        # print("the lengthe of snap send is ", len(self.snap_shot))
+        # print("the lengthe of snap send is BIG ", len(self.snap_send))
         global our_value
         our_value = [m, self.snap_send]
 
