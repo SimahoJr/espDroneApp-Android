@@ -74,7 +74,7 @@ class SetupScreen(Screen):
 
     def check_connection(self, *args):
         global c
-        c = ModbusClient(host=ip_, port=int(port_), timeout=1, auto_open=True)
+        c = ModbusClient(host=ip_, port=int(port_), timeout=0.1, auto_open=True)
 
         """There is the bug here, as if it is false (c.is_open() = False)
         it doesnt show an update on the GUI
@@ -453,9 +453,6 @@ class DebugScreen(Screen):
 
                 # 0 up to 10 for the first 100 values
                 # 10 up to 20 f0r the second 100 values
-                print(len(reg_3))
-                print(len(reg_4))
-                print(len(reg_5))
 
                 reg_0 = reg_0_snap[self.yaw_id_from:self.yaw_id_to]
                 reg_1 = reg_1_snap[self.yaw_id_from:self.yaw_id_to]
@@ -469,14 +466,32 @@ class DebugScreen(Screen):
                 reg_7 = reg_7_snap[self.roll_id_from:self.roll_id_to]
                 reg_8 = reg_8_snap[self.roll_id_from:self.roll_id_to]
 
-                self.x_max0 = len(reg_0) + self.x_max0
-                self.x_min0 = self.x_min0
-                self.x_max1 = len(reg_1) + self.x_max0
-                self.x_min1 = self.x_min1
-                self.x_max2 = len(reg_2) + self.x_max0
-                self.x_min2 = self.x_min2
-                self.x_max3 = len(reg_3) + self.x_max0
-                self.x_min3 = self.x_min2
+                # self.x_max0 = len(reg_0)
+                # self.x_min0 = self.x_min0
+                # self.x_max1 = len(reg_1)
+                # self.x_min1 = self.x_min1
+                # self.x_max2 = len(reg_2)
+                # self.x_min2 = self.x_min2
+                # self.x_max3 = len(reg_3)
+                # self.x_min3 = self.x_min2
+
+                a = (len(reg_6)) * (a + 1)
+
+                # self.x_max0 = self.x_max0 + a + 1
+                self.x_min0 = a
+                self.x_max0 = 100 + a
+                self.x_min1 = a
+                self.x_max1 = 100 + a
+                self.x_min2 = a
+                self.x_max2 = 100 + a
+                self.x_min3 = a
+                self.x_max3 = 100 + a
+
+                # self.dazzle = 2 * self.x_max0
+
+                self.dazzle = self.dazzle + 1
+                if self.dazzle == 100:
+                    self.dazzle = self.x_max0
 
             self.size_snap = [len(reg_0), len(reg_1), len(reg_2), len(reg_3), len(reg_4), len(reg_5), len(reg_6),
                               len(reg_7), len(reg_8)]
@@ -659,10 +674,10 @@ class MainScreen(Screen):
         # Reg is the 32 bit register read from the ESP
         # the 16 bits are divided to get 6 signals from the ESP
         #  4*6bit + 2*4bit, RPM=6bit, Angle&Speed 4bit
-        # if open() is ok, read register (modbus function 0x03)
+        # if open() is ok, read register (Modbus function 0x03)
         if self.connection_variable == "Connected":
             global m
-                # read 6 registers from the address 101-106, registers of 16 bit each
+            # read 6 registers from the address 101-106, registers of 16 bit each
 
             # mb.Hreg(108, yawInput);
             # mb.Hreg(107, pitchInput);
