@@ -12,7 +12,7 @@ import random
 import pyModbusTCP
 from pyModbusTCP.client import ModbusClient
 from kivy_garden.graph import Graph, MeshLinePlot, SmoothLinePlot
-INTERVAL = 0.000001    # in seconds
+INTERVAL = 0.001    # in seconds
 scanned = False
 
 Builder.load_file("kv_main.kv")
