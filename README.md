@@ -1,6 +1,7 @@
 # espDroneApp
 
 This controller works with https://github.com/SimahoJr/espDrone.git
+- I have included the Android App in this repsitory
 
 Requiremets
 
