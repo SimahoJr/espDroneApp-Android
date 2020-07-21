@@ -11,6 +11,7 @@ from math import sin
 import random
 import pyModbusTCP
 from pyModbusTCP.client import ModbusClient
+import socket
 from kivy_garden.graph import Graph, MeshLinePlot, SmoothLinePlot
 INTERVAL = 0.001    # in seconds
 scanned = False
@@ -40,6 +41,15 @@ one way to run away and save time
 TODO: This part letter
 """
 
+s = socket.socket()
+host = '127.0.0.1'
+port = 502
+mySocket = socket.socket()
+mySocket.bind((host, port))
+
+mySocket.listen(1)
+conn, addr = mySocket.accept()
+print("Connection from: " + str(addr))
 
 class SetupScreen(Screen):
     # setupScreen attributes
