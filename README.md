@@ -12,8 +12,8 @@ All up-to-date
 4. pyModbusIP
 
 You will also need
-1. Buildozer to build into mobile app (tested)
-2. Kivy_ios for ios app (tested)
+1. Buildozer to build into mobile app (Already tested)
+2. Kivy_ios for ios app (Already tested)
 
 There are two ways to connect to the app
 1. Using Local IP to control drone (192.168.4.1 and Port 502 for ModbusIP) usually connects automatically
